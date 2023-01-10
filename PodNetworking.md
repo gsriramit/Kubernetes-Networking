@@ -1,3 +1,7 @@
+## Architecture Diagram
+![Aks-Scenarios - AKS-Pod-Networking](https://user-images.githubusercontent.com/13979783/211485791-8c9160a4-873b-48cd-b030-29cb619b7bc1.png)
+
+
 ## Routing Scenarios
 ### Traffic routed between pods on the same node
 Scenario: Pod A (10.244.0.2) communicates with Pod B (10.244.0.3)  
@@ -37,7 +41,7 @@ Scenario: Pod A (10.244.0.2) communicates with Virtual Machine (10.241.0.4)
 -  The bridge would now be able to send the packets to Pod A through its veth pair
 
 ### Traffic routed between a pod and an external URL/IP address (e.g. Storage account or Container Registry)
-Scenario: Pod A (10.244.0.2) communicates with a Storage account on its public IP (with or without Service Endpoints)
+Scenario: Pod A (10.244.0.2) communicates with a Storage account on its public IP (with or without Service Endpoints)  
 **Request Flow**  
 - The default route set on the pod network namespaces direct all the traffic originating from these to the bridge through their etho0 interfaces
 - The bridge would send the packets to the Linux kernel managed virtual router as the destination address is not an interface that is connected directly to the bridge
@@ -49,7 +53,7 @@ Scenario: Pod A (10.244.0.2) communicates with a Storage account on its public I
   - If there is an instance level public IP, then that would be used (this is not usually done)
   - If there is a NAT gateway associated public IP address configured to this subnet, then that would be used
   - If no explicit public IP addresses are available, then there would be an Azure provided ephemeral public IP that would be used
-- Src: PIP of the NAT gateway, destination : PIP of the Azure Storage Account 
+- Src: PIP of the NAT gateway, destination : PIP of the Azure Storage Account  
 **Response Flow**  
 - The response sent by the Storage account would have the srcIp as its PIP and the destIp as the NAT Gateway's PIP
 - The packets would now be DNAT'd to the Node-1's private IP (10.240.0.2)
