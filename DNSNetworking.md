@@ -1,3 +1,6 @@
+## Architecture Diagram
+Aks-Scenarios - AKS-DNS-Networking.png
+
 ## DNS Resolution from the context of worker pods
 ### Concepts
 1. Kubernetes publishes information about Pods and Services which is used to program DNS. Kubelet configures Pods' DNS so that running containers can lookup Services by name rather than IP
@@ -56,7 +59,7 @@ example.local {
 - The forward plugin, according to the default configuration forwards the request to /etc/resolv.conf
 - The behavior under the hoods would be for the coreDNS pods to forward the request to the Azure DNS (168.63.129.16) provided that is what is configured at the Virtual Network level
   - If a custom DNS server had been configured at the vnet, then CoreDNS would have forwarded the requests to the specified DNS server
-  - Another way of forwarding the requests to a custom DNS server would be updating the **forward** block of the CoreFile. Note: This cannot be done manually and has to be done by applying a custom config-map. Next section contains multiple references to how this can be done
+  - Another way of forwarding the requests to a custom DNS server would be updating the **forward** block of the CoreFile. Note: This cannot be done manually and has to be done by applying a custom config-map. Next section contains multiple references to how this can be done  
 ![image](https://user-images.githubusercontent.com/13979783/212345606-950119ea-322f-4813-8d5e-dfc55ca7edb1.png)  
 
 ### Example of a resolution Graph
@@ -66,6 +69,25 @@ example.local {
     
 ### Further Reading
 
+1. Customizing CoreDNS
+   - https://learn.microsoft.com/en-us/azure/aks/coredns-custom
+   - https://medium.com/@rishasi/custom-dns-configuration-with-coredns-aks-kubernetes-599ecfb46b94
+   - https://kubernetes.io/docs/tasks/administer-cluster/dns-custom-nameservers/
+2. DNS for services and Pods - Kubernetes official documentation
+   - https://medium.com/@rishasi/custom-dns-configuration-with-coredns-aks-kubernetes-599ecfb46b94
+   - Pod's DNS policy - https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+3. Documentation of the Kubernetes plugin -CoreDNS official documentation
+   - https://coredns.io/plugins/kubernetes/
+4. Configuring multiple custom upstream nameservers. This is required to handle azure internal domain names while also using a common upstream server
+   - https://www.danielstechblog.io/setting-custom-upstream-nameservers-for-coredns-in-azure-kubernetes-service/
+5. Debugging DNS requests of pods and services
+   - https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+6. Understanding CoreDNS in K8s - CNCF presentation
+   - https://www.youtube.com/watch?v=qRiLmLACYSY&ab_channel=CNCF%5BCloudNativeComputingFoundation%5D
+7. A closer look at CoreDNS (an amazing write-up)
+   - https://blog.opstree.com/2020/06/16/a-closer-look-at-coredns/
 
-
+## Future Exploration
+Node-Local DNS Cache to reduce the time taken for name resolution requests  
+https://www.youtube.com/watch?v=XbkViBUuScE
 
