@@ -41,13 +41,31 @@ example.local {
 **General Points**  
 - CoreDNS's kubernetes plugin should have read the endpoint information from the API server by querying the appropriate API endpoint. As a result the plugin should now be having sufficient information to resolve lookup requests of pods and services within the cluster domain
 - The kubelet would have configured the pods to use the name servers for lookup requests. In cluster where CoreDNS runs, clusterIP of the coreDNS service is configured in the pod's **resolv.conf** file for requests to cluster.local and its subdomains  
-<picture>  
+![image](https://user-images.githubusercontent.com/13979783/212342391-4abc0f6c-eca2-4309-8d0b-4b8cabeb02bb.png)
 - CoreDNS's configuration i.e the configmap resource that holds the **CoreFile** consists of a configuration that specifies that the **Kubernetes** plugin would handle resolution requests for cluster.local  
-<picture>  
+ ![image](https://user-images.githubusercontent.com/13979783/212342918-3106405f-f965-44df-af65-8e74aec22b95.png)  
 **Flow Steps**
 - A worker pod does a name resolution request for nginx-service
-  - **Note**: If the worker pod and the service are in the same namespace, then NSlookup using just the service name would suffice. If the pod and the service are in different namespaces, then the pod should try to resolve *nginx-service.default.svc.cluster.local*
+  - **Note**: If the worker pod and the service are in the same namespace, then NSlookup using just the service name would suffice. If the pod and the service are in different namespaces, then the pod should try to resolve *nginx-service.default.svc.cluster.local*  
+ ![image](https://user-images.githubusercontent.com/13979783/212343865-7e2ae008-50ed-4539-9445-d8c4a33018a2.png)
 - The requests would be sent to CoreDNS service, as it is the DNS server that has been configured in the pod's /etc/resolv.conf by kubelet
-- CoreDNS would then use the Kubernetes plugin to resolve the request as it is for the cluster.local domain
+- CoreDNS would then use the Kubernetes plugin to resolve the request as it is for the cluster.local domain  
+#### Lookup of External Domains
+- A worker pod does a name resolution request for google.com
+- CoreDNS service receives the request. According the resolution graph, the kubernetes plugin would not be able to handle the request and the same would be passed down to the foward plugin.
+- The forward plugin, according to the default configuration forwards the request to /etc/resolv.conf
+- The behavior under the hoods would be for the coreDNS pods to forward the request to the Azure DNS (168.63.129.16) provided that is what is configured at the Virtual Network level
+  - If a custom DNS server had been configured at the vnet, then CoreDNS would have forwarded the requests to the specified DNS server
+  - Another way of forwarding the requests to a custom DNS server would be updating the **forward** block of the CoreFile. Note: This cannot be done manually and has to be done by applying a custom config-map. Next section contains multiple references to how this can be done
+![image](https://user-images.githubusercontent.com/13979783/212345606-950119ea-322f-4813-8d5e-dfc55ca7edb1.png)  
+
+### Example of a resolution Graph
+    
+![image](https://user-images.githubusercontent.com/13979783/212345971-cfacf8e1-c712-42cd-a5cb-9a29f7550765.png)  
+ src:https://www.youtube.com/watch?v=qRiLmLACYSY&ab_channel=CNCF%5BCloudNativeComputingFoundation%5D  
+    
+### Further Reading
+
+
 
 
