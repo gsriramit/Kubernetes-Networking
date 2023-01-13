@@ -1,3 +1,7 @@
+### Architecture Diagram
+![Aks-Scenarios - AKS-Service-Networking](https://user-images.githubusercontent.com/13979783/211585472-17f6dc88-43e9-452b-b646-2be71f6e6a6f.png)
+
+
 ### Traffic sent from a pod to a service fronting a bunch of pods (e.g. traffic from an app layer pod sent to the service fronting DB pods)
 TBD
 ### Traffic sent from an external client (VM in the same or a connected network) to a pod through a service (Node port)
