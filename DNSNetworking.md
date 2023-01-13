@@ -1,5 +1,5 @@
 ## Architecture Diagram
-Aks-Scenarios - AKS-DNS-Networking.png
+![Aks-Scenarios - AKS-DNS-Networking](https://user-images.githubusercontent.com/13979783/212348577-ff3f4cbb-83c1-4416-a5e1-5bb7c380fce1.png)
 
 ## DNS Resolution from the context of worker pods
 ### Concepts
